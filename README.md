@@ -80,6 +80,11 @@ $otp = Otp::generateFor('abcd@example.com');
     "id": 1
 }
 ```
+And then to validate, use the method `validateFor`, accepting the `$identifierValue` and the OTP as parameters and returns `bool`:
+```php
+Otp::validateFor('abcd@example.com', 187849); // returns `true`
+```
+---
 
 To generate and receive an OTP code only:
 ```php
@@ -90,6 +95,7 @@ $otp = Otp::generate();
 
 `$otp` receives back just the OTP code (`string`)
 
+---
 To override the default `length` of the OTP, pass the length as a parameter. For example, to generate an OTP that is 10 characters long:
 ```php
 $otp = Otp::generateFor('abcd@example.com', 10); 
