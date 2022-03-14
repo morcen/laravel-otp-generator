@@ -10,10 +10,10 @@ use Morcen\LaravelOtpGenerator\Models\Otp;
 
 class LaravelOtpGenerator extends Facade
 {
-    const NUMBER_SET = 'numbers';
-    const LOWER_CASE_SET = 'lower';
-    const UPPER_CASE_SET = 'uppercase';
-    const OTHERS_SET = 'others';
+    public const NUMBER_SET = 'numbers';
+    public const LOWER_CASE_SET = 'lower';
+    public const UPPER_CASE_SET = 'uppercase';
+    public const OTHERS_SET = 'others';
 
     /**
      * @param  string  $identifierValue
@@ -36,7 +36,7 @@ class LaravelOtpGenerator extends Facade
             $identifier => $identifierValue,
             'code' => $this->generate($length),
             'created_at' => now(),
-            'expiration' => now()->addMinutes(config('otp.expiration'))->timestamp
+            'expiration' => now()->addMinutes(config('otp.expiration'))->timestamp,
         ]);
     }
 
@@ -48,20 +48,20 @@ class LaravelOtpGenerator extends Facade
      */
     public function generate(?int $length = null): string
     {
-        if (!is_null($length) && $length <= 0) {
+        if (! is_null($length) && $length <= 0) {
             throw new InvalidOtpLength('Invalid OTP length provided: ' . $length);
         }
 
         $set = $this->getSet();
 
-        if (!$length) {
+        if (! $length) {
             $length = config('otp.length');
         }
 
         $code = "";
 
         for ($count = 1; $count <= $length; $count++) {
-            $code .= $set[mt_rand(0, strlen($set)-1)];
+            $code .= $set[mt_rand(0, strlen($set) - 1)];
         }
 
         return $code;
@@ -74,7 +74,7 @@ class LaravelOtpGenerator extends Facade
             ->where('code', '=', $code)
             ->first();
 
-        return $otpRecord && !$this->expired($otpRecord);
+        return $otpRecord && ! $this->expired($otpRecord);
     }
 
     /**
@@ -85,7 +85,7 @@ class LaravelOtpGenerator extends Facade
     {
         $identifier = config('otp.identifier');
 
-        if (!$identifier) {
+        if (! $identifier) {
             throw new InvalidIdentifierException("OTP's `identifier` is not yet set.");
         }
 
@@ -126,7 +126,7 @@ class LaravelOtpGenerator extends Facade
             }
 
             $chosenSet = config('otp.' . $set);
-            if (!empty($chosenSet)) {
+            if (! empty($chosenSet)) {
                 return $chosenSet;
             }
 
@@ -134,14 +134,14 @@ class LaravelOtpGenerator extends Facade
         }
 
         $combinedSet = [];
-        foreach($set as $item) {
+        foreach ($set as $item) {
             $currentSet = config('otp.' . $set);
-            if (!empty($currentSet)) {
+            if (! empty($currentSet)) {
                 $combinedSet = array_merge($combinedSet, $currentSet);
             }
         }
 
-        if (!empty($combinedSet)) {
+        if (! empty($combinedSet)) {
             return implode(null, $combinedSet);
         }
 

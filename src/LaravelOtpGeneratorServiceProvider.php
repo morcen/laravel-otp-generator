@@ -2,9 +2,9 @@
 
 namespace Morcen\LaravelOtpGenerator;
 
+use Morcen\LaravelOtpGenerator\Commands\LaravelOtpGeneratorCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Morcen\LaravelOtpGenerator\Commands\LaravelOtpGeneratorCommand;
 
 class LaravelOtpGeneratorServiceProvider extends PackageServiceProvider
 {

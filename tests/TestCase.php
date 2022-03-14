@@ -3,8 +3,8 @@
 namespace Morcen\LaravelOtpGenerator\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Morcen\LaravelOtpGenerator\LaravelOtpGeneratorServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {

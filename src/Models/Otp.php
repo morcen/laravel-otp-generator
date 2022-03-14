@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $code
- * @property integer $expiration
+ * @property int $expiration
  */
 class Otp extends Model
 {
