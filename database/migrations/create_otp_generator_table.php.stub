@@ -6,14 +6,32 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
-        Schema::create('laravel_otp_generator_table', function (Blueprint $table) {
+        Schema::create('otps', function (Blueprint $table) {
             $table->id();
 
-            // add fields
+            // Add your identifier field(s) here
+            // example: $table->string('email')
 
-            $table->timestamps();
+            $table->string('code');
+            $table->unsignedInteger('expiration');
+            $table->timestamp('created_at');
         });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('otps');
     }
 };

@@ -18,7 +18,7 @@
     "require": {
         "php": "^8.0",
         "spatie/laravel-package-tools": "^1.9.2",
-        "illuminate/contracts": "^9.0"
+        "laravel/framework": "^8.0"
     },
     "require-dev": {
         "nunomaduro/collision": "^6.0",
@@ -61,7 +61,7 @@
                 "Morcen\\LaravelOtpGenerator\\LaravelOtpGeneratorServiceProvider"
             ],
             "aliases": {
-                "LaravelOtpGenerator": "Morcen\\LaravelOtpGenerator\\Facades\\LaravelOtpGenerator"
+                "LaravelOtpGenerator": "Morcen\\LaravelOtpGenerator\\Facades\\Otp"
             }
         }
     },
