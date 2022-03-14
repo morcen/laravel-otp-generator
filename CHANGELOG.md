@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-otp-generator` will be documented in this file.
 
+## v1.0.1 - 2022-03-14
+
+- update missing core files
+
 ## v1.0.0 - 2022-03-14
 
 Initial release:
