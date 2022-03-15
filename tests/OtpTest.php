@@ -32,4 +32,3 @@ it('can generate encrypted OTP using md5', function () {
     config()->set('otp.alg', 'md5');
     expect(strlen(Otp::generate()->hash))->toBe(32) ;
 });
-

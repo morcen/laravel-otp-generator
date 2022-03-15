@@ -3,7 +3,6 @@
 namespace Morcen\LaravelOtpGenerator;
 
 use Illuminate\Support\Facades\Facade;
-use Illuminate\Support\Facades\Hash;
 use Morcen\LaravelOtpGenerator\Exceptions\InvalidIdentifierException;
 use Morcen\LaravelOtpGenerator\Exceptions\InvalidOtpHashAlgorithm;
 use Morcen\LaravelOtpGenerator\Exceptions\InvalidOtpLength;
@@ -99,7 +98,7 @@ class LaravelOtpGenerator extends Facade
      */
     public function validateFor(string $identifierValue, string $code): bool
     {
-        if ($this->isEncrypted() ) {
+        if ($this->isEncrypted()) {
             $code = $this->hash($code);
         }
 
@@ -191,7 +190,7 @@ class LaravelOtpGenerator extends Facade
     {
         $alg = config('otp.alg');
 
-        if (!in_array($alg, ['md5', 'sha1'])) {
+        if (! in_array($alg, ['md5', 'sha1'])) {
             throw new InvalidOtpHashAlgorithm('Invalid hashing algorithim: ' . $alg);
         }
 
