@@ -33,7 +33,7 @@ This package requires Laravel >= 8.x.
     - `lifetime` - defines how long the OTP will be valid for. Default is `15` minutes.
     - `length` - defines the default length of the OTP. Though this can be simply overriden whenever the `generate` or `generateFor` methods are called. Default length is `4`.
     - `encrypt` - if set to `true`, it will have additional property `hash` in the returned object. If used with `generateFor()` method, the value that will be saved in the database will be the encrypted value. Available since `v1.1.0`.
-    - `alg` - This will be the hashing algorithm used for the OTP code. This will only take effect if `encrypt` is set to `true`. Valid options are 'sha1' and 'md5'. Available since `v1.1.0`.
+    - `alg` - This will be the hashing algorithm used for the OTP code. This will only take effect if `encrypt` is set to `true`. Valid options are `sha1` and `md5`. Available since `v1.1.0`.
     
     
 1. Publish the migrations with:
@@ -63,8 +63,9 @@ This package requires Laravel >= 8.x.
 ## Usage
 
 To generate an OTP that can be validated afterwards, use the method `generatedFor()`. It accepts two parameters:
-    - `$identifierValue` (required) - the value that will be matched against the `identifer` set
-    - `$length` (optional) - the length of the code to use. If this is not provided, it will use the default `length` option set in `config/otp.php`.
+
+- `$identifierValue` (required) - the value that will be matched against the `identifier`
+- `$length` (optional) - the length of the code to use. If this is not provided, it will use the default `length` option set in `config/otp.php`.
     
 For example, we want to create an OTP for the email `abcd@example.com`:
 ```php
