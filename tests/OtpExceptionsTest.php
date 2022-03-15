@@ -4,7 +4,6 @@ use Morcen\LaravelOtpGenerator\Exceptions\InvalidIdentifierException;
 use Morcen\LaravelOtpGenerator\Exceptions\InvalidOtpLength;
 use Morcen\LaravelOtpGenerator\Exceptions\InvalidSetException;
 use Morcen\LaravelOtpGenerator\Facades\Otp;
-use Illuminate\Support\Facades\Config;
 
 it('can throw InvalidOtpLength error', function () {
     Otp::generate(-1);

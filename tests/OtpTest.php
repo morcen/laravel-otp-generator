@@ -1,7 +1,7 @@
 <?php
 
-use Morcen\LaravelOtpGenerator\Facades\Otp;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Morcen\LaravelOtpGenerator\Facades\Otp;
 
 uses(RefreshDatabase::class);
 
