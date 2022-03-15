@@ -4,7 +4,7 @@ namespace Morcen\LaravelOtpGenerator\Exceptions;
 
 use Exception;
 
-class InvalidOtpLength extends Exception implements \Throwable
+class InvalidOtpHashAlgorithm extends Exception implements \Throwable
 {
     //
 }
