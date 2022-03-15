@@ -3,13 +3,19 @@
 namespace Morcen\LaravelOtpGenerator;
 
 use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\Facades\Hash;
 use Morcen\LaravelOtpGenerator\Exceptions\InvalidIdentifierException;
+use Morcen\LaravelOtpGenerator\Exceptions\InvalidOtpHashAlgorithm;
 use Morcen\LaravelOtpGenerator\Exceptions\InvalidOtpLength;
 use Morcen\LaravelOtpGenerator\Exceptions\InvalidSetException;
 use Morcen\LaravelOtpGenerator\Models\Otp;
 
 class LaravelOtpGenerator extends Facade
 {
+    private const CODE_KEY = 'code';
+    private const HASH_KEY = 'hash';
+    private const EXPIRY_KEY = 'expiration';
+
     public const NUMBER_SET = 'numbers';
     public const LOWER_CASE_SET = 'lower';
     public const UPPER_CASE_SET = 'uppercase';
@@ -18,35 +24,46 @@ class LaravelOtpGenerator extends Facade
     /**
      * @param  string  $identifierValue
      * @param  int|null  $length
-     * @return Otp
+     * @return object
      * @throws InvalidIdentifierException
      * @throws InvalidOtpLength
      * @throws InvalidSetException
      */
-    public function generateFor(string $identifierValue, ?int $length = null): Otp
+    public function generateFor(string $identifierValue, ?int $length = null): object
     {
         $identifier = $this->getIdentifier();
-        $otpRecord = Otp::where($identifier, '=', $identifierValue)->first();
+        Otp::where($identifier, '=', $identifierValue)->delete();
 
-        if ($otpRecord && $this->expired($otpRecord)) {
-            $otpRecord->delete();
+        $otp = $this->generate($length);
+        $otpProperty = $this->isEncrypted() ? self::HASH_KEY : self::CODE_KEY;
+        $expiration = now()->addMinutes(config('otp.lifetime'))->timestamp;
+
+        Otp::create([
+            $identifier => $identifierValue,
+            'code' => $otp->$otpProperty,
+            'created_at' => now(),
+            'expiration' => $expiration,
+        ]);
+
+        $response = [
+            $identifier => $identifierValue,
+            self::CODE_KEY => $otp->code,
+            self::EXPIRY_KEY => $expiration,
+        ];
+        if ($this->isEncrypted()) {
+            $response[self::HASH_KEY] = $otp->hash;
         }
 
-        return Otp::create([
-            $identifier => $identifierValue,
-            'code' => $this->generate($length),
-            'created_at' => now(),
-            'expiration' => now()->addMinutes(config('otp.expiration'))->timestamp,
-        ]);
+        return (object)$response;
     }
 
     /**
      * @param  int|null  $length
-     * @return string
-     * @throws InvalidSetException
+     * @return object
      * @throws InvalidOtpLength
+     * @throws InvalidSetException|InvalidOtpHashAlgorithm
      */
-    public function generate(?int $length = null): string
+    public function generate(?int $length = null): object
     {
         if (! is_null($length) && $length <= 0) {
             throw new InvalidOtpLength('Invalid OTP length provided: ' . $length);
@@ -64,11 +81,28 @@ class LaravelOtpGenerator extends Facade
             $code .= $set[mt_rand(0, strlen($set) - 1)];
         }
 
-        return $code;
+        $response = [self::CODE_KEY => $code];
+
+        if ($this->isEncrypted()) {
+            $response[self::HASH_KEY] = $this->hash($code);
+        }
+
+        return (object)$response;
     }
 
+    /**
+     * @param  string  $identifierValue
+     * @param  string  $code
+     * @return bool
+     * @throws InvalidIdentifierException
+     * @throws InvalidOtpHashAlgorithm
+     */
     public function validateFor(string $identifierValue, string $code): bool
     {
+        if ($this->isEncrypted() ) {
+            $code = $this->hash($code);
+        }
+
         $identifier = $this->getIdentifier();
         $otpRecord = Otp::where($identifier, '=', $identifierValue)
             ->where('code', '=', $code)
@@ -146,5 +180,29 @@ class LaravelOtpGenerator extends Facade
         }
 
         throw new InvalidSetException('Declared OTP set is empty.');
+    }
+
+    /**
+     * @param  string  $code
+     * @return string
+     * @throws InvalidOtpHashAlgorithm
+     */
+    private function hash(string $code): string
+    {
+        $alg = config('otp.alg');
+
+        if (!in_array($alg, ['md5', 'sha1'])) {
+            throw new InvalidOtpHashAlgorithm('Invalid hashing algorithim: ' . $alg);
+        }
+
+        return hash($alg, $code);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isEncrypted(): bool
+    {
+        return  config('otp.encrypt', false);
     }
 }

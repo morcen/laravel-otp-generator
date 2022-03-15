@@ -61,5 +61,34 @@ return [
     | `Otp::generate(6)` to generate 6-character OTP
     |
     */
-    'length' => 4
+    'length' => 4,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Encrypt OTP
+    |--------------------------------------------------------------------------
+    |
+    | If set to true, OTP object will be returned with additional property
+    | `hash` for the method `generate()`. If used with `generateFor()`, the
+    | value that will be saved in the database will the encrypted value.
+    |
+    | Available since v1.1.0
+    |
+    */
+    'encrypt' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Hashing algorithm
+    |--------------------------------------------------------------------------
+    |
+    | This will be the hashing algorithm used for the OTP code. This will only
+    |  take effect if `encrypt` is set to `true`.
+    |
+    | Valid options are 'sha1' and 'md5'
+    |
+    | Available since v1.1.0
+    |
+    */
+    'alg' => 'sha1',
 ];

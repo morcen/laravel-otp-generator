@@ -32,6 +32,9 @@ This package requires Laravel >= 8.x.
         - `all` - uses all letters and numbers, including the characters in `others` option. This is the defualt option.
     - `lifetime` - defines how long the OTP will be valid for. Default is `15` minutes.
     - `length` - defines the default length of the OTP. Though this can be simply overriden whenever the `generate` or `generateFor` methods are called. Default length is `4`.
+    - `encrypt` - if set to `true`, it will have additional property `hash` in the returned object. If used with `generateFor()` method, the value that will be saved in the database will be the encrypted value. Available since `v1.1.0`.
+    - `alg` - This will be the hashing algorithm used for the OTP code. This will only take effect if `encrypt` is set to `true`. Valid options are 'sha1' and 'md5'. Available since `v1.1.0`.
+    
     
 1. Publish the migrations with:
     ```bash
@@ -70,20 +73,22 @@ use Morcen\LaravelOtpGenerator\Facades\Otp;
 $otp = Otp::generateFor('abcd@example.com');
 ```
 
-`$otp` receives back the OTP model object, e.g.
+`$otp` receives back the OTP object*, e.g.
 ```json
 {
     "email": "abcd@example.com",
-    "code": "187849",
-    "created_at": "2022-03-14T15:43:41.306756Z",
-    "expiration": 1647272681,
-    "id": 1
+    "code": "028988",
+    "hash": "6120a26f84406f452c1b27509505093ba4aa263d",
+    "expiration": 1647363156
 }
 ```
 And then to validate, use the method `validateFor`, accepting the `$identifierValue` and the OTP as parameters and returns `bool`:
 ```php
-Otp::validateFor('abcd@example.com', 187849); // returns `true`
+Otp::validateFor('abcd@example.com', '028988'); // returns `true`
 ```
+
+**NOTE: `hash` property only appears in the OTP object if `encrypt` is set to `true`.*
+
 ---
 
 To generate and receive an OTP code only:
@@ -93,7 +98,14 @@ use Morcen\LaravelOtpGenerator\Facades\Otp;
 $otp = Otp::generate();
 ```
 
-`$otp` receives back just the OTP code (`string`)
+`$otp` receives back just the OTP object like this:
+```json
+{
+    "code": "234198",
+    "hash": "858edae3093a5b6f5b7812cff2e2e369da0a2290"
+}
+```
+**NOTE: `hash` property only appears in the OTP object if `encrypt` is set to `true`.*
 
 ---
 To override the default `length` of the OTP, pass the length as a parameter. For example, to generate an OTP that is 10 characters long:
