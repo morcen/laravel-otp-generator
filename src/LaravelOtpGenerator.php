@@ -85,7 +85,7 @@ class LaravelOtpGenerator extends Facade
     {
         $identifier = config('otp.identifier');
 
-        if (! $identifier) {
+        if (empty($identifier)) {
             throw new InvalidIdentifierException("OTP's `identifier` is not yet set.");
         }
 
