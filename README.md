@@ -8,7 +8,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/morcen/laravel-otp-generator/Check%20&%20fix%20styling?label=code%20style)](https://github.com/morcen/laravel-otp-generator/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/morcen/laravel-otp-generator.svg?style=flat-square)](https://packagist.org/packages/morcen/laravel-otp-generator)
 
-This package requires Laravel >= 8.x.
+This package requires PHP >= 8.2 and Laravel >= 10.x.
 
 ## Installation
 
